@@ -69,4 +69,4 @@ The **Sports Scheduler App** aims to **simplify sports event management and sche
 ### 📥 Steps to Install  
 1️⃣ Clone the repository:  
    ```bash
-   git clone https://github.com/hEMANTH2081/FullStack-501.git
+   git clone https://github.com/hEMANTH2081/Sports-Schedular-.git
