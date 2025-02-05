@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sessions Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script> <!-- Including Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Including Chart.js -->
+    <style>
+        /* General Page Styling */
+        body {
+            background-color: #f4f7fc;
+            color: #2c3e50;
+        }
+
+        /* Table Styling */
+        table {
+            border: 1px solid #d1d5db;
+        }
+
+        th {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        td {
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        /* Hover Effects */
+        tr:hover {
+            background-color: #e0f2fe;
+        }
+
+        /* Sports Table */
+        thead.bg-green-500 {
+            background-color: #047857 !important;
+        }
+
+        tr:hover.bg-green-300 {
+            background-color: #bbf7d0 !important;
+        }
+
+        /* Sessions Per Sport Table */
+        thead.bg-yellow-500 {
+            background-color: #b45309 !important;
+        }
+
+        tr:hover.bg-yellow-300 {
+            background-color: #fde68a !important;
+        }
+
+        /* Graph Sections */
+        h2 {
+            color: #2563eb;
+        }
+
+        /* Chart Background Colors */
+        canvas {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <%- include('header.ejs',{title:'to reports page' , dashboard: '/adminPage'}) %>
+    <div class="max-w-4xl mx-auto p-6">
+
+        <!-- Sessions Table -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h1 class="text-2xl font-semibold text-center mb-6 text-blue-600">
+                Total <%= sessions.length %> Sessions Available Till Now
+            </h1>
+            <table class="rounded-lg min-w-full table-auto border-collapse border border-gray-300">
+                <thead class="bg-blue-500 text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left border-b">Sport</th>
+                        <th class="py-3 px-4 text-left border-b">Date</th>
+                        <th class="py-3 px-4 text-left border-b">Time</th>
+                        <th class="py-3 px-4 text-left border-b">Place</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% sessions.forEach(session => { %>
+                        <tr class="hover:bg-blue-100">
+                            <td class="py-3 px-4 border-b"><%= session.sport %></td>
+                            <td class="py-3 px-4 border-b"><%= new Date(session.date).toISOString().split('T')[0] %></td>
+                            <td class="py-3 px-4 border-b"><%= session.time %></td>
+                            <td class="py-3 px-4 border-b"><%= session.place %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Containers for the side-by-side tables -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+            <!-- Sports Available Table -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-blue-600">Sports Available</h2>
+                <table class="rounded-lg min-w-full table-auto border-collapse border border-gray-300">
+                    <thead class="bg-green-500 text-white">
+                        <tr>
+                            <th class="py-3 px-4 text-left border-b">Sport Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% sports.forEach(sport => { %>
+                            <tr class="hover:bg-green-300">
+                                <td class="py-3 px-4 border-b"><%= sport %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sessions Per Sport Table -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-blue-600">Sessions Per Sport</h2>
+                <table class="min-w-full table-auto border-collapse border border-gray-300">
+                    <thead class="bg-yellow-500 text-white">
+                        <tr>
+                            <th class="py-3 px-4 text-left border-b">Sport</th>
+                            <th class="py-3 px-4 text-left border-b">Number of Sessions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% sessionsPerSport.forEach(sportData => { %>
+                            <tr class="hover:bg-yellow-300">
+                                <td class="py-3 px-4 border-b"><%= sportData.sport %></td>
+                                <td class="py-3 px-4 border-b"><%= sportData.sessionCount %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bar Graph for Sports Available -->
+            <div class="mt-6 w-96">
+                <h2 class="text-xl font-semibold mb-4">Sports Available Bar Graph</h2>
+                <canvas id="sportsAvailableBarChart" class="w-48 h-48"></canvas>
+            </div>
+
+            <!-- Bar Graph for Sessions Per Sport -->
+            <div class="mt-6 w-96">
+                <h2 class="text-xl font-semibold mb-4">Sessions Per Sport Bar Graph</h2>
+                <canvas id="sessionsPerSportBarChart" class="w-48 h-48"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+        // Data for the pie chart based on sports and session count
+        const sessionData = <%- JSON.stringify(sessionsPerSport) %>;
+        const sportNames = sessionData.map(sport => sport.sport);
+        const sessionCounts = sessionData.map(sport => sport.sessionCount);
+
+        // Bar Chart for Sports Available
+        const ctxBarAvailable = document.getElementById('sportsAvailableBarChart').getContext('2d');
+        new Chart(ctxBarAvailable, {
+            type: 'bar',
+            data: {
+                labels: sportNames,
+                datasets: [{
+                    label: 'Sports Available',
+                    data: sessionCounts,
+                    backgroundColor: '#4BC0C0',
+                    borderColor: '#2B9F9F',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Bar Chart for Sessions Per Sport
+        const ctxBarSessions = document.getElementById('sessionsPerSportBarChart').getContext('2d');
+        new Chart(ctxBarSessions, {
+            type: 'bar',
+            data: {
+                labels: sportNames,
+                datasets: [{
+                    label: 'Number of Sessions',
+                    data: sessionCounts,
+                    backgroundColor: '#FF6384',
+                    borderColor: '#FF4384',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>

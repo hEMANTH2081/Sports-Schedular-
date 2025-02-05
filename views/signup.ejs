@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {            
+            background-image: url('illustration-background-of-collection-of-balls-and-sports-equipment-ai-generated-photo.jpg');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(196, 235, 235);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 3px 10px black;
+            width: 40%;
+            max-width: 400px;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .signup-form {
+            width: 100%;
+            max-width: 250px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid gray;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            text-align: center;
+            width: 50%;
+            padding: 10px;
+            background-color: #15f345;
+            color: rgb(102, 98, 99);
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #26a7fd;
+        }
+        .text-center {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .text-center a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+        .img-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .img-container img {
+            width: 70%;
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="img-container">
+            <img src="add-user.png" alt="Signup">
+        </div>
+        <div class="form-container">
+            <form action="/signup-details" method="POST" class="signup-form">
+                <h2>Sign Up</h2>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required>
+                
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required>
+                
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                
+                <label for="role">Role</label>
+                <select id="role" name="role">
+                    <option value="admin">Admin</option>
+                    <option value="player">Player</option>
+                </select>
+                
+                <button type="submit">Sign Up</button>
+                <p class="text-center">Already have an account? <a href="/login">Log In</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

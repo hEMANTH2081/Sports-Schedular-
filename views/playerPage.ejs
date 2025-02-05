@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body {
+            background: linear-gradient(to right, #2196F3, #00BCD4);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1, h2 {
+            text-align: center;
+            color: #0d47a1;
+        }
+        
+        .sports-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sports-list li {
+            background: #64b5f6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
+            color: white;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .sports-list li:hover {
+            transform: scale(1.05);
+            background: #1e88e5;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s;
+            color: white;
+        }
+        
+        .button:hover {
+            transform: scale(1.05);
+        }
+        
+        .create-session-btn {
+            background: #2e7d32;
+        }
+        
+        .create-session-btn:hover {
+            background: #1b5e20;
+        }
+        
+        .join-btn {
+            background: #1565c0;
+        }
+        
+        .join-btn:hover {
+            background: #0d47a1;
+        }
+        
+        .unjoin-btn {
+            background: #e53935;
+            display: none;
+        }
+        
+        .unjoin-btn:hover {
+            background: #c62828;
+        }
+        
+        .session-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+        }
+        
+        .session-card:hover {
+            transform: scale(1.05);
+            background: #f3f3f3;
+        }
+        
+        /* Player Icon */
+        .player-icon {
+            width: 80px; /* Decreased size */
+            height: auto;
+            display: block;
+        }
+
+        /* Sessions Grid */
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+
+        /* Button Visibility Control */
+        button.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <%- include('header.ejs', {title: 'Player', dashboard:'/playerPage', sign:'Sign Out' }) %>
+
+    <div class="container">
+        <center>
+            <img src="soccer-player.png" alt="Player Icon" class="player-icon">
+            <h1><b>Player</b></h1>
+        </center>
+
+        <h2>Available Sports:</h2>
+        <ul class="sports-list">
+            <% sports.forEach(sport => { %>
+                <li>
+                    <h1><%= sport %></h1>
+                    <button class="button create-session-btn" onclick="openSessionForm()">Create Session</button>
+                </li>
+            <% }) %>
+        </ul>
+
+        <%- include('createSessions') %>
+
+        <h2>Sessions Available</h2>
+        <div class="sessions-grid">
+            <% sessions.filter(session => (parseInt(session.actualTeamSize) * 2 - (parseInt(session.teamAsize) + parseInt(session.teamBsize))) > 0).forEach(session => { %>
+                <div class="session-card">
+                    <h3><%= session.sport %></h3>
+                    <p><b>Team A:</b> <%= session.teamA %></p>
+                    <p><b>Team B:</b> <%= session.teamB %></p>
+                    <p><b>Place:</b> <%= session.place %></p>
+                    <p><b>Date:</b> <%= session.date.toLocaleDateString() %></p>
+                    <p><b>Time:</b> <%= session.time %></p>
+                    <p><b>Available Slots:</b> <%= (parseInt(session.actualTeamSize) * 2 - (parseInt(session.teamBsize) + parseInt(session.teamAsize))) %></p>
+
+                    <button id="joinButton<%= session.id %>" class="button join-btn" onclick="toggleJoinUnjoin(<%= session.id %>)">
+                        Join Now
+                    </button>
+                    <button id="unjoinButton<%= session.id %>" class="button unjoin-btn hidden" onclick="toggleJoinUnjoin(<%= session.id %>)">
+                        Unjoin Now
+                    </button>
+                </div>
+            <% }); %>
+        </div>
+
+        <h2>Completed Sessions</h2>
+        <div class="sessions-grid">
+            <% 
+                const completedSessions = sessions.filter(session => (parseInt(session.actualTeamSize) * 2 - (parseInt(session.teamAsize) + parseInt(session.teamBsize))) === 0);
+                if (completedSessions.length === 0) { 
+            %>
+                <p style="text-align:center; color:red;">No Sessions completed till now</p>
+            <% } else {
+                completedSessions.forEach(session => { %>
+                    <div class="session-card">
+                        <h3><%= session.sport %></h3>
+                        <p><b>Team A:</b> <%= session.teamA %></p>
+                        <p><b>Team B:</b> <%= session.teamB %></p>
+                        <p><b>Place:</b> <%= session.place %></p>
+                        <p><b>Date:</b> <%= session.date.toLocaleDateString() %></p>
+                        <p><b>Time:</b> <%= session.time %></p>
+                        <p style="color: red;"><b>No slots available</b></p>
+                        <button class="button join-btn" disabled>Join Now</button>
+                    </div>
+                <% }); 
+            } %>
+        </div>
+
+        <%- include('updateSessionForm') %>
+    </div>
+</body>
+</html>

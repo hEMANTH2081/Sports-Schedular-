@@ -1,0 +1,51 @@
+<div id="updateSessionFormContainer" style="background-color: white; display: none; border-radius: 10px; margin: 20px 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 100%;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; height: 100vh; padding: 20px;">
+        <form method="post" id="updateSessionForm" style="background-color: #f8f9fa; padding: 20px 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 600px;">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; color: #333;">Update Session</h2>
+            <input type="hidden" id="sessionId" name="sessionId">
+            <div style="margin-bottom: 15px;">
+                <label for="sport" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Select Sport</label>
+                <select id="sport" name="sport" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none; background-color: white;">
+                    <% sports.forEach(sport => { %>
+                        <option value="<%= sport %>"><%= sport %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 250px;">
+                    <label for="teamA" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Team A</label>
+                    <input type="text" id="teamA" name="teamA" placeholder="Enter team lead name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+                    <label for="teamASize" style="display: block; font-size: 14px; font-weight: 500; color: #555; margin-top: 10px;">Team A Size</label>
+                    <input type="number" id="teamASize" name="teamASize" placeholder="Enter team size" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <label for="teamB" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Team B</label>
+                    <input type="text" id="teamB" name="teamB" placeholder="Enter team lead name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+                    <label for="teamBSize" style="display: block; font-size: 14px; font-weight: 500; color: #555; margin-top: 10px;">Team B Size</label>
+                    <input type="number" id="teamBSize" name="teamBSize" placeholder="Enter team size" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+                </div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="actualSize" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Actual Size of a Team</label>
+                <input type="number" id="actualSize" name="actualSize" placeholder="Enter actual size of a team" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="place" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Place</label>
+                <input type="text" id="place" name="place" placeholder="Enter session place" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 250px;">
+                    <label for="date" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Date</label>
+                    <input type="date" id="date" name="date" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <label for="time" style="display: block; font-size: 14px; font-weight: 500; color: #555;">Time</label>
+                    <input type="time" id="time" name="time" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+                </div>
+            </div>
+            <button id="updateButton" type="button" onclick="getFormData()" style="margin-top: 15px; width: 100%; background-color: #007bff; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s ease;">
+                Update Session
+            </button>
+        </form>
+    </div>
+</div>

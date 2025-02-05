@@ -1,0 +1,14 @@
+<header style="background-color: #ebe844; padding: 16px; color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <!-- Dynamically injected title -->
+        <h1 style="font-size: 1.25rem; font-weight: bold;">Welcome <%= title %></h1>
+        <nav>
+            <ul style="display: flex; gap: 24px;">
+                <!-- Dynamic Dashboard link -->
+                <li><a href="<%= dashboard %>" style="font-size: 1.125rem; font-weight: 600; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; transition: background-color 0.3s ease; hover: color: #1D4ED8; hover: background-color: white;">Dashboard</a></li>
+                <li><a href="/reports" style="font-size: 1.125rem; font-weight: 600; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; transition: background-color 0.3s ease; hover: color: #1D4ED8; hover: background-color: white;">Reports</a></li>
+                <li><a href="/signout" style="font-size: 1.125rem; font-weight: 600; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; transition: background-color 0.3s ease; hover: color: #1D4ED8; hover: background-color: white;">Sign Out</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
